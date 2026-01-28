@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Be my Valentine? 💘</title>
+  <style>
+    :root {
+      --bg1: #fff5f8;
+      --bg2: #ffe8f1;
+      --text: #2b2b2b;
+      --yes: #21c55d;
+      --no: #ef4444;
+      --card: rgba(255,255,255,0.85);
+      --shadow: 0 20px 60px rgba(0,0,0,0.12);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, var(--bg2), transparent 55%),
+                  radial-gradient(900px 700px at 90% 30%, #ffe3ec, transparent 55%),
+                  linear-gradient(135deg, var(--bg1), #ffffff);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* floating hearts */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      filter: blur(0.2px);
+    }
+    .heart {
+      position: absolute;
+      font-size: 18px;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.9); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.25); opacity: 0; }
+    }
+
+    .wrap {
+      width: min(720px, 100%);
+      text-align: center;
+      position: relative;
+    }
+
+    .title {
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 44px);
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: #ff4d8d;
+      text-shadow: 0 6px 0 rgba(255,77,141,0.12);
+    }
+
+    .from {
+      font-weight: 900;
+      font-size: clamp(28px, 4vw, 44px);
+      margin: 14px 0 0;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: #ff4d8d;
+      text-shadow: 0 6px 0 rgba(255,77,141,0.12);
+   }
+
+
+    .subtitle {
+      margin: 0 0 18px;
+      font-size: 14px;
+      opacity: 0.75;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px 18px 22px;
+      border: 1px solid rgba(255, 120, 170, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .sticker {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 30px;
+      background: rgba(255, 195, 216, 0.35);
+      border: 1px solid rgba(255, 120, 170, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+    .sticker .emoji {
+      font-size: 58px;
+      transform: translateY(2px);
+    }
+    .sticker .mini {
+      position: absolute;
+      inset: auto 10px 10px auto;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .bearGif {
+      display: block;        /* removes inline baseline weirdness */
+      max-width: 100%;       /* never exceed sticker box */
+      max-height: 100%;
+      width: 110px;          /* tweak if you want */
+      height: 110px;
+      object-fit: contain;   /* keep whole gif visible */
+      margin: auto;          /* center */
+  }
+
+
+    .question {
+      font-size: 18px;
+      margin: 8px 0 18px;
+      font-weight: 700;
+    }
+
+    .btnRow {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 0 4px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+      user-select: none;
+    }
+    button:active { transform: translateY(2px) scale(0.98); }
+
+    #yesBtn {
+      background: var(--yes);
+      color: white;
+      font-size: 18px;
+      min-width: 120px;
+      transform-origin: center;
+    }
+    #noBtn {
+      background: var(--no);
+      color: white;
+      font-size: 14px;
+      min-width: 110px;
+      opacity: 0.98;
+    }
+
+    .hint {
+      margin: 12px 0 0;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* final screen */
+    .final {
+      display: none;
+      text-align: center;
+      padding: 26px 18px;
+    }
+    .final .big {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      color: #ff3d86;
+      margin: 0 0 10px;
+    }
+    .final .hug {
+      font-size: 70px;
+      margin: 8px 0 6px;
+    }
+    .final .small {
+      font-size: 14px;
+      opacity: 0.8;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="wrap">
+    <h1 class="title">Hi Tristen 💗 I made something for you...</h1>
+    <p class="subtitle"></p>
+
+    <div class="card" id="gameCard">
+      <div class="sticker" id="sticker">
+        <img
+            src="bear-love.gif"
+            alt="Cute bear holding flowers"
+            class="bearGif"
+            id="bearGif"
+        />
+        <div class="mini" id="stickerMini"></div>
+    </div>
+
+      <div class="question" id="question">Will you be my Valentine?</div>
+
+      <div class="btnRow">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+      </div>
+
+    </div>
+
+    <div class="card final" id="finalCard">
+      <img
+        src="bear-kiss-bear-kisses.gif"
+        alt="Bear kissing panda"
+        class="finalGif"
+    />
+    <p class="big">Ok yay!!!</p>
+    <p class="from">See you on Valentine’s</p>
+    <p class="from">From Andre 💗</p>
+</div>
+
+
+  <script>
+    // Cute “are you sure?” messages for the No button
+    const noMessages = [
+      "Really sure?",
+      "Are you 100% sure??",
+      "Last chance!",
+      "Pleaseee 😭",
+      "Don’t break my heart :(",
+      "Is that your final answer?",
+      "Think again 🥺",
+      "Ok… but what if yes? 😌",
+      "I’ll ask one more time…",
+    ];
+
+    // Optional: change sticker as it escalates
+    const stickerSteps = [
+      { emoji: "🧸", mini: "💗" },
+      { emoji: "🧸", mini: "💞" },
+      { emoji: "🐻", mini: "💘" },
+      { emoji: "🐻‍❄️", mini: "💝" },
+      { emoji: "🐻", mini: "💖" },
+    ];
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const question = document.getElementById("question");
+    //const hint = document.getElementById("hint");
+    const gameCard = document.getElementById("gameCard");
+    const finalCard = document.getElementById("finalCard");
+    //const stickerEmoji = document.getElementById("stickerEmoji");
+    const stickerMini = document.getElementById("stickerMini");
+
+    let noCount = 0;
+
+    // Start size for "Yes" button
+    let yesScale = 1;
+
+    // Continuous floating hearts background (covers the whole page)
+    const heartsEl = document.getElementById("hearts");
+    const heartChars = ["💗","💖","💘","💝","💕","💞"];
+
+    function spawnHeart() {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+
+    // start BELOW the screen and float up
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.bottom = (-20 - Math.random() * 60) + "px";  // start under viewport
+    h.style.top = "auto";
+
+    // varied size + speed
+    h.style.fontSize = (14 + Math.random() * 22) + "px";
+    h.style.animationDuration = (4 + Math.random() * 6) + "s";
+
+    heartsEl.appendChild(h);
+
+    // remove after it finishes (prevents lag)
+    const durationMs = parseFloat(h.style.animationDuration) * 1000;
+    setTimeout(() => h.remove(), durationMs + 200);
+    }
+
+    // Burst at start so it instantly looks “full”
+    for (let i = 0; i < 120; i++) spawnHeart();
+
+    // Then keep spawning to maintain full coverage
+    setInterval(spawnHeart, 120);
+
+
+    function updateSticker(step) {
+      // keep only the mini heart updates (works with your GIF)
+      const s = stickerSteps[step % stickerSteps.length];
+      stickerMini.textContent = s.mini;
+    }
+
+
+    function growYesButton() {
+      // Increase scale each "No"
+      // After a few clicks, it becomes huge (fills screen vibe)
+      yesScale += (noCount < 3) ? 0.35 : (noCount < 6 ? 0.55 : 0.8);
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      // Keep text readable as it grows
+      const newFont = Math.min(18 + noCount * 6, 64);
+      yesBtn.style.fontSize = newFont + "px";
+      yesBtn.style.padding = `${12 + noCount * 6}px ${18 + noCount * 10}px`;
+
+      // Make No button feel smaller / more helpless
+      const noFont = Math.max(14 - noCount * 1, 10);
+      noBtn.style.fontSize = noFont + "px";
+      noBtn.style.filter = `saturate(${1 - noCount * 0.05})`;
+
+      // If it gets too big, hide No (so "no choice" happens)
+      if (noCount >= 7) {
+        noBtn.style.display = "none";
+        // hint.textContent = "Ok ok… I think we both know the answer 😌💘";
+      }
+    }
+
+    function updateNoText() {
+      const msg = noMessages[Math.min(noCount, noMessages.length - 1)];
+      noBtn.textContent = msg;
+    }
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+      updateNoText();
+      updateSticker(noCount);
+      growYesButton();
+    });
+
+    yesBtn.addEventListener("click", () => {
+      // Show final screen
+      gameCard.style.display = "none";
+      finalCard.style.display = "block";
+      // Optional: change page title
+      document.title = "Ok yay!!! 💘";
+    });
+  </script>
+</body>
+</html>
